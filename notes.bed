@@ -1,0 +1,17 @@
+2/11:
+Leaving off with try to figure out how to integrate the python script into the snakemake and getting it to run and give the proper output
+
+2/15:
+first overlap script has been written but needs troubleshooting
+
+2/16:
+overlap file has been output, but it is only counting individual base pairs at a time and also need titles for the columns 
+but need the contig sequence to be output as well. Could be in the same file (check for redundancy?)
+now gives the full overlap, but need to have it listed as a contig 
+
+3/12:
+The overlap list should now be fixed, but now working on the conti list. 
+The contig list only considers the sequence that actually extend the fragment and it lists the points of overlap but I can't get the sequence listed in the output to be correct, which is needed for further iterations over the contigs 
+
+3/21:
+it is only outputting the overlaps in the forwards direction
