@@ -10,4 +10,4 @@ Identifying the longest contig surronding a query sequence can be useful when te
 ...
 ## Installing 
 conda install -c bioconda snakemake
-pip install -r
+pip install numpy
