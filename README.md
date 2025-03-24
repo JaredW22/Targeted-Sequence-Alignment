@@ -8,5 +8,6 @@ This pipeline outputs many files. The overlap_list.tsv lists all sequences that 
 Identifying the longest contig surronding a query sequence can be useful when testing to see if genetic manipulation has been sucessful, such as CRISPR-based gene editing, or trying to identify the origin of a contaminating sequence during a PCR reaction. In the CRISPR example, one would select a unique sequence adjacent to the site of targeted manipulation as the query sequence, and then use the longest contig to test whether the desired editing took place. In the case of PCR contamination, one would select the primer as the query sequence and then allign the contigs to various genomes to identify the source of the contamination. Or, if you have a different use case, feel free to see if this pipeline works for you!
 # How to Use
 ...
-# How to Install 
-...
+## Installing 
+conda install -c bioconda snakemake
+pip install -r
