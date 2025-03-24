@@ -13,7 +13,9 @@ bsub < run_snake.bsub
 ```
 or
 ```bash
-
+module load python/3.8.5
+snakemake --snakefile ./Snakefile --cores 1
+```
 ## Installing 
 Installing snakemake, which runs all of the scripts in order, with the output files of one script used as inputs into the next scripts
 ```bash
