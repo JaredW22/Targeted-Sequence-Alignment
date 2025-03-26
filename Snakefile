@@ -19,7 +19,7 @@ rule read_sequences:
 rule identify_overlap1:
 	input:
 		test = "/beevol/home/williamj/CPBS/test_READS.tsv",
-	#R1 = "/beevol/home/williamj/CPBS/READS.bed",
+		#R1 = "/beevol/home/williamj/CPBS/READS.bed",
 		query = "/beevol/home/williamj/CPBS/QUERY.fasta",
 		script = "/beevol/home/williamj/CPBS/initial_overlap.py"
 	output:
@@ -29,4 +29,15 @@ rule identify_overlap1:
 		"""
 		python3.8 {input.script} {input.test} {input.query} {output.overlap_list} {output.contig_list}
 		"""
-
+rule extend_contigs:
+	input:
+		test = "/beevol/home/williamj/CPBS/test_READS.tsv",
+        	#R1 = "/beevol/home/williamj/CPBS/READS.bed",
+		contigs = "/beevol/home/williamj/CPBS/contig_list.tsv"
+		script = "/beevol/home/williamj/CPBS/extend_contigs.py"
+	output:
+		longest_contig = "/beeveol/home/williamj/CPBS/longest_contig.tsv"
+	shell:
+		"""
+		python3.8 {input.script} {input.test} {input.contigs} {output.longest_contig}
+		"""
