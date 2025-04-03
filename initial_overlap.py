@@ -26,7 +26,7 @@ def query_overlap(query_seq, query_name, array, min_overlap_length=10):
         temp_overlaps_rev = []
         temp_contigs = []
         for i in range(len(query_seq)):
-            for j in range(i + min_overlap_length, len(query_seq) + 1): #interating through the query sequence and checking for allignment with the read, taking the longest allignment found 
+            for j in range(i + min_overlap_length, len(query_seq)+1): #interating through the query sequence and checking for allignment with the read, taking the longest allignment found 
                 substring = query_seq[i:j]
                 rev_comp_substring = reverse_complement(substring) #doing the same for the reverse direction 
                 if substring in seq:
@@ -54,10 +54,10 @@ def query_overlap(query_seq, query_name, array, min_overlap_length=10):
             if abs(length) == len(query_seq):
                 combined_sequence = seq
                 temp_contigs.append((name, query_name, combined_sequence,i, j, start_index, end_index, length))
-            elif query_seq[:min_overlap_length] in seq: #checking for overlap at the ends of the query to extend sequence
+            if query_seq[:min_overlap_length] in seq: #checking for overlap at the ends of the query to extend sequence
                 combined_sequence = seq[:end_index] + query_seq[j:]
                 temp_contigs.append((name, query_name, combined_sequence,i, j, start_index, end_index, length))
-            elif query_seq[-min_overlap_length:] in seq:
+            if query_seq[-min_overlap_length:] in seq:
                 combined_sequence = query_seq[:j] + seq[end_index:]
                 temp_contigs.append((name, query_name, combined_sequence,i, j, start_index, end_index, length))
         if temp_overlaps_rev:
@@ -74,10 +74,10 @@ def query_overlap(query_seq, query_name, array, min_overlap_length=10):
             if abs(add[-1]) == len(query_seq):
                 combined_sequence = seq
                 temp_contigs.append((name, query_name, combined_sequence, i, j, start_index, end_index, length))
-            elif query_seq[:min_overlap_length] in seq:
+            if query_seq[:min_overlap_length] in seq:
                 combined_sequence = query_seq[j:] + seq[end_index:]
                 temp_contigs.append((name, query_name, combined_sequence, i, j, start_index, end_index, length))
-            elif query_seq[-min_overlap_length:] in seq:
+            if query_seq[-min_overlap_length:] in seq:
                 combined_sequence =  seq[start_index:] + query_seq[j:]
                 temp_contigs.append((name, query_name, combined_sequence, i, j, start_index, end_index, length))          
         if temp_contigs:

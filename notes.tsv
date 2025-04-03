@@ -33,3 +33,15 @@ Working on how to generate the combined sequences, also need to update the GitHu
 3/25:
 See if removing sequences shorter than a certain number of bp does anything
 Need to add a parameter for the minimum overlap length 
+And need to add unit testing 
+
+4/2:
+Unit testing has been added for the initial_overlap.py script and now working on the iterative approach. 
+Iterative approach needs to be finished and matched with the Snakemake too. 
+Still need to add the parameter for the minimum overlap length 
+Got the iteration working and passes the unit tests but there is an issue with generating a file with actual reads in it. Unit tests are working for the beginning but may need to add to the later pieces too
+
+4/3: 
+Unit tests have been added to the iterative approach and are now working 
+Iterative appraoch now has an output! But is outputting the sequences with the most reads incorporated instead of the longest reads. 
+Still need to add the parameter for the minimum overlap length

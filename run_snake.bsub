@@ -6,4 +6,4 @@
 #BSUB -e stderr_%J.err
 
 module load python/3.8.5
-snakemake --snakefile ./Snakefile --cores 1
+snakemake --snakefile ./Snakefile --cores 1 --latency-wait 60

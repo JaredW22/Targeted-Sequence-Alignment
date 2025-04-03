@@ -1,10 +1,16 @@
 import sys
 import numpy as np
-
+import unittest
 
 def reverse_complement(seq):
     complement = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C'}
-    return ''.join(complement[base] for base in reversed(seq))
+    try:
+        return ''.join(complement[base] for base in reversed(seq) if base in complement)
+    except KeyError as e:
+        print(f"Invalid character {e} found in sequence.")
+        return None
+
+
 
 def read_tsv(filename):  # read tsv and output lists of names and sequences
     names = []
@@ -18,80 +24,71 @@ def read_tsv(filename):  # read tsv and output lists of names and sequences
     return names, np.array(sequences)
 
 
-def contig_overlap(contig_seq, contig_name, array, min_overlap_length=10): # if keeping this structure, going to need to do a for loop when running this function to iterate through contigs
+def contig_overlap(contig_seq, array, min_overlap_length=10):  
     contigs = []
-    for name, seq in array:
-        temp_overlaps_fwd = []
-        temp_overlaps_rev = []
-        temp_contigs = []
+    temp_contigs = []
+    for row in array:
+        if len(row) == 2:
+            name, seq = row
+        else:
+            seq = row 
+        rev_seq = reverse_complement(seq)
         if contig_seq[:min_overlap_length] in seq:
             start_index = seq.find(contig_seq[:min_overlap_length])
             combined_sequence = seq[:start_index] + contig_seq
-        elif contig_seq[-min_overlap_length:] in seq:
-            start_index = seq.find(contig_seq[-min_overlap_seq:])
-            end_index = #... I'm not sure if the above is the right approach 
-
-            if abs(length) == len(query_seq):
-                combined_sequence = seq
-                temp_contigs.append((name, query_name, combined_sequence,i, j, start_index, end_index, length))
-            elif query_seq[:min_overlap_length] in seq: #checking for overlap at the ends of the query to extend sequence
-                combined_sequence = seq[:end_index] + query_seq[j:]
-                temp_contigs.append((name, query_name, combined_sequence,i, j, start_index, end_index, length))
-            elif query_seq[-min_overlap_length:] in seq:
-                combined_sequence = query_seq[:j] + seq[end_index:]
-                temp_contigs.append((name, query_name, combined_sequence,i, j, start_index, end_index, length))
-       
-
-
-
-         if temp_overlaps_rev:
-            add = max(temp_overlaps_rev, key=lambda x: x[-1])
-            overlaps.append(add)
-            name = add[0]
-            query_name = add[1]
-            seq = add[2]
-            i = add[3]
-            j = add[4]
-            start_index = add[5]
-            end_index = add[6]
-            length = add[7]                    
-            if abs(add[-1]) == len(query_seq):
-                combined_sequence = seq
-                temp_contigs.append((name, query_name, combined_sequence, i, j, start_index, end_index, length))
-            elif query_seq[:min_overlap_length] in seq:
-                combined_sequence = query_seq[j:] + seq[end_index:]
-                temp_contigs.append((name, query_name, combined_sequence, i, j, start_index, end_index, length))
-            elif query_seq[-min_overlap_length:] in seq:
-                combined_sequence =  seq[start_index:] + query_seq[j:]
-                temp_contigs.append((name, query_name, combined_sequence, i, j, start_index, end_index, length))          
-        if temp_contigs:
-            add = max(temp_contigs, key=lambda x: x[-1])
-            contigs.append(add)
-    return overlaps, contigs
-
+            temp_contigs.append(combined_sequence)
+        if contig_seq[-min_overlap_length:] in seq:
+            start_index = contig_seq.find(seq[:min_overlap_length])
+            combined_sequence = contig_seq[:start_index] + seq
+            temp_contigs.append(combined_sequence)
+        if contig_seq[:min_overlap_length] in rev_seq:
+            start_index = rev_seq.find(contig_seq[:min_overlap_length])
+            combined_sequence = rev_seq[:start_index] + contig_seq
+            temp_contigs.append(combined_sequence)
+        if contig_seq[-min_overlap_length:] in rev_seq:
+            start_index = contig_seq.find(rev_seq[:min_overlap_length])
+            combined_sequence = contig_seq[:start_index] + rev_seq
+            temp_contigs.append(combined_sequence)
+    return temp_contigs
 
 if __name__ == "__main__": #pulling the file names in from the Snakemake
-    array = sys.argv[1]
-    query = sys.argv[2]
-    overlap_list = sys.argv[3]
-    contig_list = sys.argv[4]
-
-    with open(query, 'r') as file:
+    reads = sys.argv[1]
+    contig_list = sys.argv[2]
+    longest_contig = sys.argv[3]
+    read_names, sequences_array = read_tsv(reads)
+    with open(contig_list, 'r') as file:
         lines = file.readlines()
-        query_name = lines[0].strip()[1:] #to get rid of the carrot
-        query_seq = lines[1].strip() #only pulls the second line from the query file
-    read_names, sequences_array = read_tsv(array)
-    overlaps, contigs = query_overlap(query_seq, query_name, zip(read_names, sequences_array))
-    
-    with open(overlap_list, 'w') as overlap_file:
-        overlap_file.write(f"sseqid\tqseqid\tsequence\tquery_start\tquery_end\tseq_start\tseq_end\tlength\n")
-        for name, query_name, sequence, query_start, query_end, seq_start, seq_end, length in overlaps:
-            overlap_file.write(f"{name}\t{query_name}\t{sequence}\t{query_start}\t{query_end}\t{seq_start}\t{seq_end}\t{length}\n")
+    #print("lines:", lines)
+    sequences = []
+    for line in lines:
+        columns = line.split('\t')
+        if len(columns) > 2: 
+            sequences.append(columns[2])
+    #print("sequences", sequences)
+    contigs_list = []
+    all_contigs = []
+    for previous_contig in sequences:
+        temp_contigs = contig_overlap(previous_contig, sequences_array)
+        contigs_list = contigs_list + temp_contigs
+        #print("checking contigs_list", contigs_list)
+    pre_contigs = contigs_list
+    all_contigs = contigs_list
+    #print("this is pre_contigs", pre_contigs, "this is the first contigs_list:", contigs_list)
+    while len(contigs_list) > 0:
+        #print("this is the next contigs_list:", contigs_list)
+        pre_contigs = contigs_list
+        temp_contigs = []
+        contigs_list = []
+        for term in pre_contigs:
+            temp_contigs = contig_overlap(term, reads)
+            contigs_list = contigs_list + temp_contigs
+        all_contigs = all_contigs + contigs_list
+    #print("outside the loop, pre_contigs:", pre_contigs)
+    longest = [term for term in all_contigs if len(term) == max(len(term) for term in all_contigs)]
+    with open(longest_contig, 'w') as longest_contig_file:
+        longest_contig_file.write(f"sequence\n")
+        for seq in longest:
+            longest_contig_file.write(f"{seq}\n")
 
-    with open(contig_list, 'w') as contig_file:
-        contig_file.write(f"name\tqseqid\tsequence\tquery_start\tquery_end\tseq_start\tseq_end\tlength\n")
-        for name, query_name, combined_sequence, query_start, query_end, seq_start, seq_end, length in contigs:
-            contig_file.write(f"{name}\t{query_name}\t{combined_sequence}\t{query_start}\t{query_end}\t{seq_start}\t{seq_end}\t{length}\n")
-#then compare each sequence to the query and list the sequences that match and with how muh overlap
-#count each of these sequences as contigs only if they extend the query, maybe shorten to only compare against the first and last ten bp of the query 
-#compare all sequences against the contigs iteravily until no longer generating new contigs of longer lengths (this should probably be a different script) 
+
+
