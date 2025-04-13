@@ -1,3 +1,11 @@
 Date	Job	Time_taken
 3/23	Read sequences and identify overlap	2:02:00
 4/2     Read sequences, identify overlap and contigs	2:38:00
+4/7	Extend contigs	less than one minute
+4/8	Extend contigs and identify all sequences aligning to contig	terminated after 28 hours, modifying code and rerunning
+4/9	Extend contigs and identify all sequences aligning to contig	35 seconds with modified code
+4/13	Whole Snakefile after modifying the initial overlap to include the break statement	less than one minute with the test_READS file
+4/13	Whole Snakefile after modifying the initial overlap to include the break statement	24 minutes for the full reads file
+
+
+

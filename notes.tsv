@@ -45,3 +45,40 @@ Got the iteration working and passes the unit tests but there is an issue with g
 Unit tests have been added to the iterative approach and are now working 
 Iterative appraoch now has an output! But is outputting the sequences with the most reads incorporated instead of the longest reads. 
 Still need to add the parameter for the minimum overlap length
+and need to align all of the files to the new query 
+and update the GitHub
+
+4/5: 
+Fixed to output the longest read 
+
+4/7:
+code for finding all reads aligning to the query passed unit tests, now just integrating into the Snakemake
+Fixed the titles of the output files 
+Need to make sure the format of these files is correct 
+Still need to add the parameter for the minimum overlap length
+and update the GitHub
+After running the long portion, changed the fasta file writing code so need to check that next
+
+4/8:
+Looks like identifying the contigs is taking forever to run, so might want to rework to save the reads in a new file and only test against the reads that we know allign to find the locations
+Added a break statement and the small files run very quickly so terminated the previous job and rerunning now with the test reads file 
+added absolute value to ensure lengths are not negative 
+
+4/9:
+the new method of identifying the reads overlapping the contig is very fast ~ 30 seconds
+next places to optimize are the initial overlap function
+adding a minimum overlap parameter 
+then test on the full dataset!
+updating Github
+
+4/13:
+fixed the initial overlap function so now runs in less than a minute
+added the minimum overlap parameter
+Now just need to test on the full set of reads, and if it works, update the github
+
+
+
+
+
+
+ 

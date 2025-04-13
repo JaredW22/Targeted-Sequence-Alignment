@@ -24,7 +24,7 @@ def read_tsv(filename):  # read tsv and output lists of names and sequences
     return names, np.array(sequences)
 
 
-def contig_overlap(contig_seq, array, min_overlap_length=10):  
+def contig_overlap(contig_seq, array, min_overlap_length):  
     contigs = []
     temp_contigs = []
     for row in array:
@@ -55,6 +55,7 @@ if __name__ == "__main__": #pulling the file names in from the Snakemake
     reads = sys.argv[1]
     contig_list = sys.argv[2]
     longest_contig = sys.argv[3]
+    min_overlap_length = sys.argv[4]
     read_names, sequences_array = read_tsv(reads)
     with open(contig_list, 'r') as file:
         lines = file.readlines()
@@ -68,7 +69,7 @@ if __name__ == "__main__": #pulling the file names in from the Snakemake
     contigs_list = []
     all_contigs = []
     for previous_contig in sequences:
-        temp_contigs = contig_overlap(previous_contig, sequences_array)
+        temp_contigs = contig_overlap(previous_contig, sequences_array, int(min_overlap_length))
         contigs_list = contigs_list + temp_contigs
         #print("checking contigs_list", contigs_list)
     pre_contigs = contigs_list
@@ -80,15 +81,18 @@ if __name__ == "__main__": #pulling the file names in from the Snakemake
         temp_contigs = []
         contigs_list = []
         for term in pre_contigs:
-            temp_contigs = contig_overlap(term, reads)
+            temp_contigs = contig_overlap(term, reads, int(min_overlap_length))
             contigs_list = contigs_list + temp_contigs
         all_contigs = all_contigs + contigs_list
     #print("outside the loop, pre_contigs:", pre_contigs)
     longest = [term for term in all_contigs if len(term) == max(len(term) for term in all_contigs)]
     with open(longest_contig, 'w') as longest_contig_file:
-        longest_contig_file.write(f"sequence\n")
+        i = 1
         for seq in longest:
-            longest_contig_file.write(f"{seq}\n")
+            name = "sequence" + str(i)
+            i = i+1
+            longest_contig_file.write(f"{name}\n")
+            longest_contig_file.write(f">{seq}\n")
 
 
 

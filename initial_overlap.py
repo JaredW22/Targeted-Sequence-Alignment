@@ -18,7 +18,7 @@ def read_tsv(filename):  # read tsv and output lists of names and sequences
     return names, np.array(sequences)
 
 
-def query_overlap(query_seq, query_name, array, min_overlap_length=10):
+def query_overlap(query_seq, query_name, array, min_overlap_length):
     overlaps = []
     contigs = []
     for name, seq in array:
@@ -40,6 +40,8 @@ def query_overlap(query_seq, query_name, array, min_overlap_length=10):
                     end_index = start_index - len(rev_comp_substring)
                     length = i-j
                     temp_overlaps_rev.append((name, query_name, seq, i, j, start_index, end_index, length))
+                else:
+                    break
         if temp_overlaps_fwd:
             add = max(temp_overlaps_fwd, key=lambda x: x[-1])
             name = add[0]
@@ -86,18 +88,19 @@ def query_overlap(query_seq, query_name, array, min_overlap_length=10):
     return overlaps, contigs
 
 
+
 if __name__ == "__main__": #pulling the file names in from the Snakemake
     array = sys.argv[1]
     query = sys.argv[2]
     overlap_list = sys.argv[3]
     contig_list = sys.argv[4]
-
+    min_overlap_length = sys.argv[5]
     with open(query, 'r') as file:
         lines = file.readlines()
         query_name = lines[0].strip()[1:] #to get rid of the carrot
         query_seq = lines[1].strip() #only pulls the second line from the query file
     read_names, sequences_array = read_tsv(array)
-    overlaps, contigs = query_overlap(query_seq, query_name, zip(read_names, sequences_array))
+    overlaps, contigs = query_overlap(query_seq, query_name, zip(read_names, sequences_array), int(min_overlap_length))
     
     with open(overlap_list, 'w') as overlap_file:
         overlap_file.write(f"sseqid\tqseqid\tsequence\tquery_start\tquery_end\tseq_start\tseq_end\tlength\n")
@@ -108,6 +111,3 @@ if __name__ == "__main__": #pulling the file names in from the Snakemake
         contig_file.write(f"name\tqseqid\tsequence\tquery_start\tquery_end\tseq_start\tseq_end\tlength\n")
         for name, query_name, combined_sequence, query_start, query_end, seq_start, seq_end, length in contigs:
             contig_file.write(f"{name}\t{query_name}\t{combined_sequence}\t{query_start}\t{query_end}\t{seq_start}\t{seq_end}\t{length}\n")
-#then compare each sequence to the query and list the sequences that match and with how muh overlap
-#count each of these sequences as contigs only if they extend the query, maybe shorten to only compare against the first and last ten bp of the query 
-#compare all sequences against the contigs iteravily until no longer generating new contigs of longer lengths (this should probably be a different script) 
