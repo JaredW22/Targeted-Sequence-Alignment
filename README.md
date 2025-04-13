@@ -16,6 +16,12 @@ or
 module load python/3.8.5
 snakemake --snakefile ./Snakefile --cores 1
 ```
+## To Change the Minimum Overlap Length
+The minimum overlap length is default set to 10bp. To change this, you must change the value at the top of the Snakefile. To do this:
+```
+vim Snakefile
+```
+Press i to insert new text, then change the value at the top of the Snakefile assigned to min_overlap_len
 ## Installing 
 Installing snakemake, which runs all of the scripts in order, with the output files of one script used as inputs into the next scripts
 ```bash
