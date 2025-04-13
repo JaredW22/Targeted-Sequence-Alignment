@@ -4,7 +4,7 @@ min_overlap_len = 10
 
 rule all:
     input:
-     	"/beevol/home/williamj/CPBS/output.aln"  
+     	"/beevol/home/williamj/CPBS/ALLELES.aln"  
 
 rule read_sequences:
 	input: 	

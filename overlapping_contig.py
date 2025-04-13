@@ -79,7 +79,7 @@ with open(query, 'r') as file:
     lines = file.readlines()
     i = 1
     with open(overlap_list, 'w') as overlap_file:
-        overlap_file.write(f"sseqid\tqseqid\tsequence\tquery_start\tquery_end\tseq_start\tseq_end\tlength\n")
+        overlap_file.write(f"sseqid\tqseqid\tsequence\tqstart\tqend\tsstart\tsend\tlength\n")
         for line in lines[1:]:
             query_name = "sequence" + str(i)
             query_seq = line
