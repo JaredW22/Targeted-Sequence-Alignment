@@ -6,8 +6,8 @@
 #BSUB -e stderr_%J.err
 
 module load python/3.8.5
-#python3.8 unit_test_initial_overlap.py
+python3.8 unit_test_initial_overlap.py
 
-#python3.8 unit_test_extend_contigs.py
+python3.8 unit_test_extend_contigs.py
 
 python3.8 unit_test_overlapping_contig.py
