@@ -4,16 +4,16 @@ min_overlap_len = 10
 
 rule all:
     input:
-     	"/beevol/home/williamj/CPBS/ALLELES.aln"  
+     	"./output/ALLELES.aln"  
 
 rule read_sequences:
 	input: 	
-		#test = "/beevol/home/williamj/CPBS/test_READS.fasta",
-		R1 = "/beevol/home/williamj/CPBS/READS.fasta",
-		script = "/beevol/home/williamj/CPBS/read_fasta.py"
+		#test = "./input_files/test_READS.fasta",
+		R1 = "./input_files/READS.fasta",
+		script = "./scripts/read_fasta.py"
 	output: 
-		#test_out = "/beevol/home/williamj/CPBS/test_READS.tsv",
-		R1_out = "/beevol/home/williamj/CPBS/READS.tsv"
+		#test_out = "./input_files/test_READS.tsv",
+		R1_out = "./input_files/READS.tsv"
 	shell:
 		"""
 		python3.8 {input.script} {input.R1} {output.R1_out}
@@ -21,13 +21,13 @@ rule read_sequences:
 
 rule identify_overlap1:
 	input:
-		#test = "/beevol/home/williamj/CPBS/test_READS.tsv",
-		R1 = "/beevol/home/williamj/CPBS/READS.tsv",
-		query = "/beevol/home/williamj/CPBS/QUERY.fasta",
-		script = "/beevol/home/williamj/CPBS/initial_overlap.py"
+		#test = "./input_files/test_READS.tsv",
+		R1 = "./input_files/READS.tsv",
+		query = "./input_files/QUERY.fasta",
+		script = "./scripts/initial_overlap.py"
 	output:
-		overlap_list = "/beevol/home/williamj/CPBS/overlap_list.tsv",
-		contig_list = "/beevol/home/williamj/CPBS/contig_list.tsv"
+		overlap_list = "./intermediate_files/overlap_list.tsv",
+		contig_list = "./intermediate_files/contig_list.tsv"
 	params:
 		minimum_overlap_length = min_overlap_len
 	shell:
@@ -36,12 +36,12 @@ rule identify_overlap1:
 		"""
 rule extend_contigs:
 	input:
-		#test = "/beevol/home/williamj/CPBS/test_READS.tsv",
-	       	R1 = "/beevol/home/williamj/CPBS/READS.tsv",
-		contigs = "/beevol/home/williamj/CPBS/contig_list.tsv",
-		script = "/beevol/home/williamj/CPBS/extend_contigs.py"
+		#test = "./input_files/test_READS.tsv",
+	       	R1 = "./input_files/READS.tsv",
+		contigs = "./intermediate_files/contig_list.tsv",
+		script = "./output/extend_contigs.py"
 	output:
-		longest_contig = "/beevol/home/williamj/CPBS/ALLELES.fasta"
+		longest_contig = "./output/ALLELES.fasta"
 	params: minimum_overlap_length = min_overlap_len
 	shell:
 		"""
@@ -50,12 +50,12 @@ rule extend_contigs:
 
 rule contig_overlap:
 	input:
-		#test = "/beevol/home/williamj/CPBS/test_READS.tsv",
-                R1 = "/beevol/home/williamj/CPBS/READS.tsv",
-		contig = "/beevol/home/williamj/CPBS/ALLELES.fasta",
-		script = "/beevol/home/williamj/CPBS/overlapping_contig.py"
+		#test = "./input/test_READS.tsv",
+                R1 = "./input/READS.tsv",
+		contig = "./output/ALLELES.fasta",
+		script = "./scripts/overlapping_contig.py"
 	output:
-		aln = "/beevol/home/williamj/CPBS/ALLELES.aln"
+		aln = "./output/ALLELES.aln"
 	params: minimum_overlap_length = min_overlap_len
 	shell:
 		"""
