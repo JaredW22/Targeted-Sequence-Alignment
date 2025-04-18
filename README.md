@@ -56,3 +56,40 @@ Press i to insert new text, then change the value at the top of the Snakefile as
 ```
 :wq
 ```
+# Explanation of Files
+## Snakefile
+This is the file that can be used to run the entire pipeline in one command. See installation instructions if this file is not running properly.
+## log.tsv
+This is the log of run times throughout my troubleshooting and optimization process. This is not meant to be used in the pipeline, but only for reference. 
+## notes.tsv
+This is a log of my notes as I went through the development of the pipeline and integration of different ideas. Mostly included for grading purposes 
+## run_snake.bsub
+This is a file that allows the running of the snakefile to be assigned to a computing cluster 
+
+## Input Files
+QUERY.fasta is an example query sequence
+READS.fasta is an example of an output fasta file from sequencing 
+READS.tsv is an intermediate file generated for easier processing 
+test_READS.fasta and tsv are similar to above, but only a subset to make things faster when troubleshooting 
+
+## Intermediate Files
+contig_list.tsv is an intermediate file generated from the initial_overlap.py that is then used in the extend_contigs.py script to have an initial list of contigs to test against the rest of the reads
+overlap_list.tsv is a list of all sequences that overlap the initial query, regardless of whether they extend the query 
+
+## Output
+ALLELES.fasta is the final longest contig sequence(s)
+ALLELES.aln is a list of all reads that overlap the final contig sequence 
+
+## Scripts
+read_fasta.py reads in the fasta files and converts them to tsvs for easier processing 
+initial_overlap.py finds all sequences that overlap the query and outputs as the overlap_list.tsv. It also finds all sequences that overlap AND extend the query sequence, and outputs these in the contig_list.tsv
+extend_contigs.py uses the initial contig_list.tsv and iteratively tests allignments to all of the reads to see if any of the other reads contain at least the minimum overlap and extend the contig. If so, these are then tested in the next iteration until a longest contig is found. 
+overlapping_contig.py then goes back and tests for allignment to the longest contig file to list all reads that overlap and where. 
+
+## unit_test
+These files are for performing unit tests on the different scripts in the Scripts repository. They can be run similar to above: 
+```
+bsub < run_unit_test.bsub
+```
+## Archive
+The archive contains older versions of the scripts to show progress in the development of this pipeline. These are not meant to be run. 
