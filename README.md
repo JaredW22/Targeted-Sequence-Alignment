@@ -17,8 +17,28 @@ pip install numpy
 ```
 
 # How to Use
-Example for running the pipeline:
+## Cloning the Repository
+Open Terminal or Command Prompt
+Navigate to the directory where you want to clone
+```
+cd path/to/your/directory
+```
+Clone the Repository
+```
+git clone https://github.com/JaredW22/Targeted-Sequence-Alignment.git
+```
+Navigate to the cloned repository:
+```
+cd Targeted-Sequence-Alignment
+```
+Verify successful cloning by listing the files
+```
+ls
+```
+
+## Example for running the pipeline:
 ```bash
+cd /path/to/cloned/repository
 bsub < run_snake.bsub
 ```
 or
@@ -26,6 +46,7 @@ or
 module load python/3.8.5
 snakemake --snakefile ./Snakefile --cores 1
 ```
+Inside the run_snake.bsub file is the same as the second code box above. The --snakefile argument tells the snakemake command which file to run. --cores determines the numbers of cores that the job will run on, which depends on the number of cores your computer can access. Another common argument is the --latency-wait argument, which determines how long the job will wait for the output file before spitting out an error. 
 ## To Change the Minimum Overlap Length
 The minimum overlap length is default set to 10bp. To change this, you must change the value at the top of the Snakefile. To do this:
 ```
