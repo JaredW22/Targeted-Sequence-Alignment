@@ -6,6 +6,16 @@ Input files are fasta files containing the sequencer reads and query sequence. T
 This pipeline outputs many files. The overlap_list.tsv lists all sequences that overlap with the query, and the contig_list.tsv lists the combined sequence from every overlapping sequence that can extend the contig. These files only apply to the first iteration. ALLELES.fasta is a fasta file of the longest possible contig containing the query sequence. ALLELES.aln is a .txt file that describes the allignment of all overlapping reads to the longest contig. 
 ## Example Use Cases
 Identifying the longest contig surronding a query sequence can be useful when testing to see if genetic manipulation has been sucessful, such as CRISPR-based gene editing, or trying to identify the origin of a contaminating sequence during a PCR reaction. In the CRISPR example, one would select a unique sequence adjacent to the site of targeted manipulation as the query sequence, and then use the longest contig to test whether the desired editing took place. In the case of PCR contamination, one would select the primer as the query sequence and then allign the contigs to various genomes to identify the source of the contamination. Or, if you have a different use case, feel free to see if this pipeline works for you!
+# Installing 
+Installing snakemake, which runs all of the scripts in order, with the output files of one script used as inputs into the next scripts. Here is the link to the snakemake package: https://anaconda.org/bioconda/snakemake
+```bash
+conda install -c bioconda snakemake
+```
+Installing numpy
+```bash
+pip install numpy
+```
+
 # How to Use
 Example for running the pipeline:
 ```bash
@@ -21,13 +31,7 @@ The minimum overlap length is default set to 10bp. To change this, you must chan
 ```
 vim Snakefile
 ```
-Press i to insert new text, then change the value at the top of the Snakefile assigned to min_overlap_len
-## Installing 
-Installing snakemake, which runs all of the scripts in order, with the output files of one script used as inputs into the next scripts
-```bash
-conda install -c bioconda snakemake
+Press i to insert new text, then change the value at the top of the Snakefile assigned to min_overlap_len. To write the file (save) and quit back to the original screen, hit esc, then:
 ```
-Installing numpy
-```bash
-pip install numpy
+:wq
 ```
