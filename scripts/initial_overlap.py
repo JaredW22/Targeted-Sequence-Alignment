@@ -2,7 +2,7 @@ import sys
 import numpy as np
 
 
-def reverse_complement(seq):
+def reverse_complement(seq): #creates the complimentary read in the correct orientation
     complement = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C'}
     return ''.join(complement[base] for base in reversed(seq))
 
@@ -18,7 +18,7 @@ def read_tsv(filename):  # read tsv and output lists of names and sequences
     return names, np.array(sequences)
 
 
-def query_overlap(query_seq, query_name, array, min_overlap_length):
+def query_overlap(query_seq, query_name, array, min_overlap_length): #identifies overlap of the query sequence with the reads, outputs a file listing these overlaps, and also outputs any contigs generated that extend the query sequence 
     overlaps = []
     contigs = []
     for name, seq in array:
@@ -102,7 +102,7 @@ if __name__ == "__main__": #pulling the file names in from the Snakemake
     read_names, sequences_array = read_tsv(array)
     overlaps, contigs = query_overlap(query_seq, query_name, zip(read_names, sequences_array), int(min_overlap_length))
     
-    with open(overlap_list, 'w') as overlap_file:
+    with open(overlap_list, 'w') as overlap_file: #creating and writing the files 
         overlap_file.write(f"sseqid\tqseqid\tsequence\tquery_start\tquery_end\tseq_start\tseq_end\tlength\n")
         for name, query_name, sequence, query_start, query_end, seq_start, seq_end, length in overlaps:
             overlap_file.write(f"{name}\t{query_name}\t{sequence}\t{query_start}\t{query_end}\t{seq_start}\t{seq_end}\t{length}\n")
