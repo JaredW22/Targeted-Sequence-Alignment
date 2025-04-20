@@ -2,7 +2,7 @@ import sys
 import numpy as np
 import unittest
 
-def reverse_complement(seq):
+def reverse_complement(seq): #Generates the corresponding read on the complimentary strand, input is a strand and output is the expected complimetary strand
     complement = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C'}
     try:
         return ''.join(complement[base] for base in reversed(seq) if base in complement)
@@ -24,7 +24,7 @@ def read_tsv(filename):  # read tsv and output lists of names and sequences
     return names, np.array(sequences)
 
 
-def contig_overlap(contig_seq, array, min_overlap_length):  
+def contig_overlap(contig_seq, array, min_overlap_length): #tests for overlap with a contig sequence and the list of reads. Input contig sequence, read array and the minimum overlap length parameter, output is the list of extended contigs (containing the original contig and part of the read)
     contigs = []
     temp_contigs = []
     for row in array:
@@ -80,13 +80,13 @@ if __name__ == "__main__": #pulling the file names in from the Snakemake
         pre_contigs = contigs_list
         temp_contigs = []
         contigs_list = []
-        for term in pre_contigs:
+        for term in pre_contigs: #iterates through the previous contigs
             temp_contigs = contig_overlap(term, reads, int(min_overlap_length))
             contigs_list = contigs_list + temp_contigs
         all_contigs = all_contigs + contigs_list
     #print("outside the loop, pre_contigs:", pre_contigs)
     longest = [term for term in all_contigs if len(term) == max(len(term) for term in all_contigs)]
-    with open(longest_contig, 'w') as longest_contig_file:
+    with open(longest_contig, 'w') as longest_contig_file: #writes the longest contig file
         i = 1
         for seq in longest:
             name = "sequence" + str(i)
