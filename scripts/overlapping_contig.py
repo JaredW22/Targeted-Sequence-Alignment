@@ -2,7 +2,7 @@ import sys
 import numpy as np
 
 
-def reverse_complement(seq):
+def reverse_complement(seq): #generates the complimentary strand in the correct orientation
     complement = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C'}
     try:
         return ''.join(complement[base] for base in reversed(seq) if base in complement)
@@ -21,7 +21,7 @@ def read_tsv(filename):  # read tsv and output lists of names and sequences
                 sequences.append(parts[1])
     return names, np.array(sequences)
 
-def contig_overlap(query_seq, query_name, array, min_overlap_length):
+def contig_overlap(query_seq, query_name, array, min_overlap_length): #input is the query sequence, query name, read file and minimum overlap parameter. The function then looks for all reads that ovoerlap this contig and outputs details about this overlap
     overlaps = []
     contigs = []
     for name, seq in array:
@@ -75,7 +75,7 @@ if __name__ == "__main__": #pulling the file names in from the Snakemake
     overlap_list = sys.argv[3]
     min_overlap_len = sys.argv[4]
 
-with open(query, 'r') as file:
+with open(query, 'r') as file: #writing the output file
     lines = file.readlines()
     i = 1
     with open(overlap_list, 'w') as overlap_file:
